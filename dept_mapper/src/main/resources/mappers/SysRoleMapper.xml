@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.dao.SysRoleDao">
+
+    <insert id="saveRole" parameterType="com.zh.entity.SysRole">
+		insert into sys_role (rolename,
+							  description,
+							  auths,
+							  enable,
+							  createtime)
+						values ( #{rolename},
+								 #{description},
+								 #{auths},
+								 '1',
+								 SYSDATE())
+	</insert>
+
+    <update id="updateRole" parameterType="com.zh.entity.SysRole">
+		update sys_role
+		   SET rolename = #{rolename},
+		       description = #{description},
+		       auths = #{auths},
+		       isadmin = #{isadmin},
+		       enable = #{enable},
+			   modiftytime = SYSDATE()
+		 where roleid = #{roleid}
+	</update>
+
+    <delete id="deleteRole"  parameterType="string" >
+		DELETE FROM sys_role
+		WHERE roleid = #{roleid}
+	</delete>
+
+
+</mapper>

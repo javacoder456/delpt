@@ -1,0 +1,118 @@
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+  <display-name>lasting webapp</display-name>
+
+  <!-- 加载配置文件 -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:spring/spring-mybatis.xml,classpath:spring/spring-shiro.xml</param-value>
+  </context-param>
+
+  <!--shiro 过滤器 start-->
+  <filter>
+    <filter-name>shiroFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <init-param>
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>shiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+
+  <!-- Spring MVC 核心配置开始 -->
+  <servlet>
+    <servlet-name>SpringMVC-dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <!--以下init-param是自定义SpringMVC的配置文件的位置 -->
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring/spring-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
+  </servlet>
+  <!-- 拦截设置 -->
+  <servlet-mapping>
+    <servlet-name>SpringMVC-dispatcher</servlet-name>
+    <!-- 此处可以可以配置成*.do，对应struts的后缀习惯 -->
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <!-- Spring MVC 核心配置结束 -->
+  <!--Spring监听器 ApplicationContext 载入 -->
+  <listener>
+      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <!-- 防止Spring内存溢出监听器 -->
+  <listener>
+     <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
+  <!-- 开发模式 -->
+  <context-param>
+    <param-name>spring.profiles.active</param-name>
+    <param-value>dev</param-value>
+  </context-param>
+  <context-param>
+    <param-name>spring.profiles.default</param-name>
+    <param-value>dev</param-value>
+  </context-param>
+  <context-param>
+    <param-name>spring.liveBeansView.mbeanDomain</param-name>
+    <param-value>dev</param-value>
+  </context-param>
+
+  <!--Log4j配置-->
+  <context-param>
+    <param-name>log4jRefreshInterval</param-name>
+    <param-value>60000</param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+  </listener>
+
+  <!-- 编码过滤器 -->
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <welcome-file-list>
+    <welcome-file>/login/login.do</welcome-file>
+  </welcome-file-list>
+
+  <!-- 出错页面定义 -->
+  <error-page>
+    <exception-type>java.lang.Throwable</exception-type>
+    <location>/error/error.do</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error/error.do</location>
+  </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error/error.do</location>
+  </error-page>
+
+</web-app>

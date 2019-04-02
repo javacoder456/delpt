@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zh.dao.SysAuthorityDao">
+
+    <update id="editAuth" parameterType="com.zh.entity.SysAuthority" >
+        UPDATE sys_authority a
+           SET a.roleid = #{roleid},
+           a.authorityname = #{authorityname},
+           a.fatherid = #{fatherid},
+           a.url = #{url},
+           a.icon = #{icon},
+           a.modiftytime = #{modiftytime},
+           a.enable = #{enable}
+        WHERE a.authorityid = #{authorityid}
+    </update>
+    <insert id="addAuth"  parameterType="com.zh.entity.SysAuthority" >
+		insert into sys_authority
+		  (roleid,
+		   authorityname,
+		   fatherid,
+		   url,
+		   createtime,
+		   createid,
+		   createname,
+		   icon,
+		   children,
+		   enable)
+		values
+		  (#{roleid},
+		   #{authorityname},
+		   #{fatherid},
+		   #{url},
+		   sysdate(),
+		   #{createid},
+		   #{createname},
+		   #{icon},
+		   #{children},
+		   '1' )
+	</insert>
+
+	<delete id="deleteAuth"  parameterType="string" >
+		DELETE FROM sys_authority
+		WHERE authorityid = #{authorityid}
+	</delete>
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://192.168.9.101:61616"></property>
+		<property name="userName" value="admin"></property>
+		<property name="password" value="admin"></property>
+	</bean>
+
+	<!--使用缓存可以提升效率-->
+	<bean id="cachingConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory" ref="activeMQConnectionFactory" />
+		<property name="sessionCacheSize" value="1"/>
+	</bean>
+
+	<!-- 定义消息队列（Queue） -->
+	<bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
+		<!-- 设置消息队列的名字 -->
+		<constructor-arg value="spring-activemq"/>
+	</bean>
+
+	<!-- 生产者定义 -->
+	<bean id ="jmsTemplate" class= "org.springframework.jms.core.JmsTemplate" >
+		<property name ="connectionFactory" ref= "cachingConnectionFactory"></property >
+		<property name ="defaultDestination" ref="destination" ></property >
+		<property name ="deliveryPersistent" value= "true"></property >
+		<!-- true是topic，false是queue，默认是false，此处显示写出false -->
+		<property name ="pubSubDomain" value="false"></property>
+		<property name ="sessionAcknowledgeMode" value= "1"></property >
+		<property name ="explicitQosEnabled" value= "true"></property >
+	</bean >
+
+	<!-- 配置消息队列监听者（Queue）-->
+	<bean id="myQueueMessageListener" class="com.zh.common.taskmanger.active.QueueMessageListener" />
+
+	<!-- 显示注入消息监听容器（Queue），配置连接工厂，监听的目标是demoQueueDestination，监听器是上面定义的监听器 -->
+	<bean id="queueListenerContainer"
+		  class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="cachingConnectionFactory" />
+		<property name="destination" ref="destination" />
+		<property name="messageListener" ref="myQueueMessageListener" />
+	</bean>
+
+</beans>
+

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.dao.SysUserDao">
+
+    <!-- 查询cloud——note的cn_User表 -->
+    <select id="findUserByName" parameterType="java.lang.String" resultType="com.zh.entity.SysUser">
+		select *
+		  from sys_user
+		 where name = #{username}
+	</select>
+
+    <!-- 查询cloud——note的cn_User表 -->
+    <select id="findUserById" parameterType="string" resultType="com.zh.entity.SysUser">
+		select *
+		  from sys_user
+		 where userid = #{userid}
+	</select>
+
+    <select id="getAllUsers"  resultType="com.zh.entity.SysUser">
+		select *
+		  from sys_user
+	</select>
+
+    <insert id="saveUser" parameterType="com.zh.entity.SysUser">
+		insert into sys_user
+				   (name,
+				    password,
+					phonenumber,
+					address,
+					enable,
+					email,
+					age,
+					roleid,
+					faultrole,
+					registertime,
+					lastmodifytime,
+					sex)
+				values( #{name},
+						#{password},
+						#{phonenumber},
+						#{address},
+						#{enable},
+						#{email},
+						#{age},
+						#{roleid},
+						#{faultrole},
+						sysdate(),
+						sysdate(),
+						#{sex})
+
+	</insert>
+
+    <update id="updateUser" parameterType="com.zh.entity.SysUser" >
+        UPDATE sys_user
+           SET roleid = #{roleid},
+			   name = #{name},
+			   password = #{password},
+			   phonenumber = #{phonenumber},
+			   email = #{email},
+			   address = #{address},
+			   enable = #{enable},
+			   age = #{age},
+			   faultrole = #{faultrole},
+			   lastmodifytime = sysdate(),
+			   sex = #{sex}
+        WHERE userid = #{userid}
+    </update>
+
+    <delete id="deleteUser"  parameterType="string" >
+		DELETE FROM sys_user
+		WHERE userid = #{userid}
+	</delete>
+</mapper>

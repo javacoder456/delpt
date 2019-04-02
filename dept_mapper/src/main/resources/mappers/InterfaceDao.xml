@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zh.dao.InterfaceDao">
+
+	<select id="getAll"  resultType="com.zh.entity.Interfaceconfig">
+		select *
+		  from interfaceconfig
+	</select>
+
+	<select id="getTradeById" parameterType="string"  resultType="com.zh.entity.Interfaceconfig">
+		select *
+		  from interfaceconfig
+		 where tradeserviceid = #{tradeserviceid}
+	</select>
+
+	<insert id="saveTrade" parameterType="com.zh.entity.Interfaceconfig">
+		insert into interfaceconfig  (tradeserviceid,
+									  tradeservicetype,
+									  tradeservicename,
+									  trademethod,
+									  opertion,
+									  serviceconsumerid,
+									  serviceconsumername,
+									  datasourceid,
+									  sqltext,
+									  recode,
+									  redesc,
+									  callbackid,
+									  createid,
+									  createtime,
+									  modifytime)
+							  values (#{tradeserviceid},
+							  		  #{tradeservicetype},
+							  		  #{tradeservicename},
+									  #{trademethod},
+									  #{opertion},
+									  #{serviceconsumerid},
+									  #{serviceconsumername},
+									  #{datasourceid},
+									  #{sqltext},
+									  #{recode},
+									  #{redesc},
+									  #{callbackid},
+									  #{createid},
+									  SYSDATE(),
+									  #{modifytime}
+									  )
+	</insert>
+
+	<delete id="deleteTradeById"  parameterType="string" >
+		DELETE FROM interfaceconfig
+		WHERE tradeserviceid = #{tradeserviceid}
+	</delete>
+</mapper>
